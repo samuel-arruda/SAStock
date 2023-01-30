@@ -1,7 +1,7 @@
 # SAStock
 Projeto de registro de cliente e registro de produtos.
 
-#Tecnologias aplicadas:
+# Tecnologias aplicadas:
 -> Criação de uma lista, utilizando uma Interface do tipo classe;
 -> Utilização de ArrayList, Generics;
 -> Utilização do conceito de importação de entidade/ou classe;
