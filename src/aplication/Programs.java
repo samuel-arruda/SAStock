@@ -1,58 +1,85 @@
 package aplication;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.TimeZone;
 
+import entities.Clients;
+import entities.Order;
+import entities.OrderItem;
 import entities.Produtos;
+import entitiesEnums.OrderStatus;
 
 public class Programs {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		Locale.setDefault(Locale.US);
 		Scanner sc = new Scanner(System.in);
-
-		System.out.println("-------------------------");
-		System.out.println("Adição de produtos: ");
-		System.out.println("-------------------------");
-
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		sdf2.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		
+		
+		System.out.println("-------------------------");
+		System.out.println("Insira os dados do cliente: ");
+		System.out.println("-------------------------");
 
-		List<Produtos> list = new ArrayList<>();
-		char resp;
-		do {
-			System.out.print("Quantos produtos você quer adicionar? ");
-			int n = sc.nextInt();
+		System.out.print("Nome do cliente: ");
+		String name = sc.nextLine();
+		
+		System.out.print("Email do cliente: ");
+		String email = sc.nextLine();
+		
+		System.out.print("Data de aniversario do cliente: ");
+		Date dataAniver = sdf.parse(sc.next());
+		
+		Clients client = new Clients(name, email, dataAniver);
+		
+		System.out.println("---------------------------");
+		System.out.println("Insira os dados do pedido:");
+		System.out.println("---------------------------");
+		
+		Date moment = new Date();
+		sdf2.format(moment);
+		
+		System.out.print("Status: ");
+		OrderStatus status = OrderStatus.valueOf(sc.next().toUpperCase());
+		
+		Order pedido = new Order(moment, status, client);
+		
+		System.out.print("Quantos itens cabem neste pedido? ");
+		int n = sc.nextInt();
+		
+		
+		for(int i = 1; i <= n ; i++) {
+			sc.nextLine();
+
+			System.out.println("Digite os dados do item nº" + i + ":");
 			
-			for (int i = 1; i <= n; i++) {
-
-				sc.nextLine();
-				System.out.println("\nProduto nº" + i + ":");
-				System.out.print("Nome do produto: ");
-				String nome = sc.nextLine();
-
-				System.out.print("Preço: ");
-				Double preco = sc.nextDouble();
-
-				System.out.print("Quantidade: ");
-				Integer quant = sc.nextInt();
-
-				list.add(new Produtos(nome, preco, quant));
-				
-
-			}
-			System.out.print("Deseja continuar?[S/N] ");
-			resp = sc.next().toUpperCase().charAt(0);
-		} while (resp != 'N');
-
-		System.out.println("\nProdutos cadastrados:");
-		System.out.println("--------------------------");
-
-		for (Produtos obj : list) {
-			System.out.println(obj);
-			System.out.println("--------------------------");
+			System.out.print("Nome do produto: ");
+			String nomeProd = sc.nextLine();
+			
+			
+			System.out.print("Preço do produto: ");
+			Double price = sc.nextDouble();
+			
+			System.out.print("Quantidade: ");
+			Integer quant = sc.nextInt();
+			
+			Produtos prod = new Produtos(nomeProd, price);
+		
+			OrderItem item = new OrderItem(price, quant, prod);
+			pedido.addItem(item);
 		}
+		
+		System.out.println();
+		System.out.println("RESUMO DO PEDIDO:");
+		System.out.println(pedido);
 
 		sc.close();
 	}
